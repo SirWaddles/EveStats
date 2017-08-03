@@ -1,21 +1,5 @@
-import {InfluxDB, FieldType} from 'influx';
-
-const influx = new InfluxDB({
-    host: 'localhost',
-    database: 'plex',
-    schema: [
-        {
-            measurement: 'plex_price',
-            fields: {
-                highestBuy: FieldType.INTEGER,
-                lowestSell: FieldType.INTEGER,
-                bidSpread: FieldType.INTEGER,
-                marketDepth: FieldType.INTEGER,
-            },
-            tags: [],
-        }
-    ]
-});
+import {InfluxDB} from 'influx';
+import influx from './database';
 
 function writeInfluxStats(highestBuy, lowestSell, bidSpread, marketDepth) {
     influx.writePoints([{

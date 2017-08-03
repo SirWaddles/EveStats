@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "discord.js": "^11.1.0",
+    "highcharts-export-server": "^1.0.18",
     "influx": "^5.0.7",
     "node-fetch": "^1.7.1",
-    "uws": "^8.14.0"
+    "uws": "^8.14.0",
+    "webpack-node-externals": "^1.6.0"
   }
 }
