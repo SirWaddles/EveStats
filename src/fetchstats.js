@@ -28,6 +28,7 @@ fetch(MarketDataURL, {
 const DEPTH_METER = 100000; // One hundred thousand
 
 function AggregateStats(data) {
+    console.log(data);
     var buys = data.filter(v => v.is_buy_order).sort((a, b) => b.price - a.price);
     var sells = data.filter(v => !v.is_buy_order).sort((a, b) => a.price - b.price);
 

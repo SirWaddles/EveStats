@@ -3,14 +3,17 @@ const path = require('path');
 
 
 module.exports = {
-    entry: './src/entry.js',
+    entry: {
+        datafetch: './src/entry.js',
+        discordbot: './src/bot.js',
+    },
     target: 'node',
     output: {
         path: path.resolve(__dirname, 'njs'),
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
     },
     resolve: {
-        extensions: [ '.js' ]
+        extensions: [ '.js', '.json' ]
     },
     plugins: [
         new webpack.DefinePlugin({
