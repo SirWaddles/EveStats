@@ -1,15 +1,10 @@
 import {InfluxDB} from 'influx';
 import influx from './database';
 
-function writeInfluxStats(highestBuy, lowestSell, bidSpread, marketDepth) {
+function writeInfluxStats(data) {
     influx.writePoints([{
         measurement: 'plex_price',
-        fields: {
-            highestBuy: highestBuy,
-            lowestSell: lowestSell,
-            bidSpread: bidSpread,
-            marketDepth: marketDepth,
-        },
+        fields: data,
         tags: {},
     }])
 }

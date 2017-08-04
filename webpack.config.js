@@ -5,8 +5,9 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: {
-        datafetch: './src/entry.js',
+        datafetch: './src/fetchstats.js',
         discordbot: './src/bot.js',
+        historics: './src/historics.js',
     },
     externals: [nodeExternals()],
     target: 'node',
