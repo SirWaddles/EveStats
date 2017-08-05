@@ -1,9 +1,9 @@
 import {InfluxDB} from 'influx';
 import influx from './database';
 
-function writeInfluxStats(data) {
+function writeInfluxStats(data, measurement) {
     influx.writePoints([{
-        measurement: 'plex_price',
+        measurement: measurement,
         fields: data,
         tags: {},
     }])

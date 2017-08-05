@@ -2,13 +2,13 @@ import exporter from 'highcharts-export-server';
 
 exporter.initPool();
 
-function BuildGraph(data1, data2) {
+function BuildGraph(data1, data2, title) {
     return new Promise(function(resolve, reject) {
         var exportSettings = {
             type: 'png',
             options: {
                 title: {
-                    text: 'My Chart'
+                    text: title
                 },
                 xAxis: {
                     type: 'datetime',
@@ -24,7 +24,11 @@ function BuildGraph(data1, data2) {
                         data: data2,
                         name: 'Sell Price',
                     }
-                ]
+                ],
+                chart: {
+                    width: 1280,
+                    height: 720,
+                }
             }
         };
 

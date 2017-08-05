@@ -13,6 +13,16 @@ const influx = new InfluxDB({
                 marketDepth: FieldType.INTEGER,
             },
             tags: [],
+        },
+        {
+            measurement: 'skil_price',
+            fields: {
+                highestBuy: FieldType.INTEGER,
+                lowestSell: FieldType.INTEGER,
+                bidSpread: FieldType.INTEGER,
+                marketDepth: FieldType.INTEGER,
+            },
+            tags: [],
         }
     ]
 });
