@@ -37,6 +37,8 @@ client.on('message', message => {
                         name: 'chart.png',
                     }
                 ]
+            }).then(function(message) {
+                message.delete(60000);
             });
         })
     }
