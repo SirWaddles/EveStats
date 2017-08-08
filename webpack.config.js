@@ -8,6 +8,7 @@ module.exports = {
         datafetch: './src/fetchstats.js',
         discordbot: './src/bot.js',
         historics: './src/historics.js',
+        wsserver: './src/server.js',
     },
     externals: [nodeExternals()],
     target: 'node',
