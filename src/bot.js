@@ -12,8 +12,8 @@ function TranslateToHighcharts(data, property) {
     ]);
 }
 
-function FetchDatabaseStats(measurement) {
-    const fullQuery = "SELECT highestBuy, lowestSell FROM plex.autogen." + measurement + " WHERE time > now() - 24h";
+function FetchDatabaseStats(measurement, time) {
+    const fullQuery = "SELECT highestBuy, lowestSell FROM plex.autogen." + measurement + " WHERE time > now() - " + time + "d";
     var title = "Plex Buy/Sell Price";
     if (measurement == 'skill_price') {
         title = 'Large Skill Injector';
@@ -25,11 +25,20 @@ function FetchDatabaseStats(measurement) {
 
 client.on('message', message => {
     if (message.content.slice(0, 7) === 'plexbot') {
+        var params = message.content.slice(7).trim().split(' ');
         var measurement = 'plex_price';
-        if (message.content.slice(7) === 'skill') {
+        var time = 1;
+        if (params.length >= 1 && params[0] === 'skill') {
             measurement = 'skill_price';
         }
-        FetchDatabaseStats(measurement).then(function(graphBuffer) {
+        if (params.length >= 2) {
+            time = parseInt(params[1]);
+            if (Number.isNaN(time)) {
+                message.reply('Sorry, you must be a dope! Try a real number.');
+                return;
+            }
+        }
+        FetchDatabaseStats(measurement, time).then(function(graphBuffer) {
             message.reply('Here you go', {
                 files: [
                     {
@@ -38,7 +47,7 @@ client.on('message', message => {
                     }
                 ]
             }).then(function(message) {
-                message.delete(60000);
+                message.delete(1000 * 60 * 10); // 10 minutes
             });
         })
     }

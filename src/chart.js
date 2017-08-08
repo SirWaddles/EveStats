@@ -28,6 +28,11 @@ function BuildGraph(data1, data2, title) {
                 chart: {
                     width: 1280,
                     height: 720,
+                },
+                line: {
+                    marker: {
+                        enabled: false,
+                    }
                 }
             }
         };
@@ -42,7 +47,8 @@ export {BuildGraph};
 
 function EndPool() {
     exporter.killPool();
-    process.exit(1);
 }
+
+process.on('exit', EndPool);
 
 export {EndPool};
