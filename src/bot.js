@@ -5,6 +5,8 @@ const client = new Discord.Client();
 import influx from './database';
 import {BuildGraph} from './chart';
 
+import {AddAction, BroadcastMessage} from './server.js'; // Start the WebSocket server.
+
 function TranslateToHighcharts(data, property) {
     return data.map(v => [
         v.time.getTime(),
@@ -24,6 +26,19 @@ function FetchDatabaseStats(measurement, time) {
 }
 
 client.on('message', message => {
+    if (message.mentions.users.has(client.user.id)) {
+        BroadcastMessage({
+            type: 'mention',
+            message: message.content,
+            author: message.author.username,
+        });
+    }
+    if (message.author.id == '171926582414409728') {
+        BroadcastMessage({
+            type: 'sylver',
+            message: message.content,
+        });
+    }
     if (message.content.slice(0, 7) === 'plexbot') {
         var params = message.content.slice(7).trim().split(' ');
         var measurement = 'plex_price';
