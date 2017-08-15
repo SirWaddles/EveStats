@@ -1,4 +1,5 @@
 import Discord from 'discord.js';
+import approx from 'approximate-number';
 import DiscordToken from './discordtoken';
 const client = new Discord.Client();
 
@@ -60,6 +61,14 @@ const PlexPriceUSD = [
     [15400, 500],
 ];
 
+function IskPackages(message, params) {
+    FetchDatabaseStats('plex_price', 1).then(function(data) {
+        var plexprice = data.pop().lowestSell;
+        var text = PlexPriceUSD.map(v => 'Buy **' + approx(plexprice * v[0]) + '** isk for **$' + v[1] + '**');
+        message.channel.send(text.join("\n"));
+    });
+}
+
 function PlexSkillPrice(plexprice, skillprice, plexrate) {
     return (skillprice / plexprice) * plexrate;
 }
@@ -91,6 +100,7 @@ const MessageActions = {
     'plex': SendGraphImage,
     'skill': SendGraphImage,
     'price': SkillPrices,
+    'isk': IskPackages,
 };
 
 client.on('message', message => {
