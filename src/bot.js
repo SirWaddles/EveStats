@@ -95,12 +95,15 @@ function SkillPrices(message, params) {
     });
 }
 
+import {ReceiveRegister} from './skills';
+
 const MessageActions = {
     default: SendGraphImage,
     'plex': SendGraphImage,
     'skill': SendGraphImage,
     'price': SkillPrices,
     'isk': IskPackages,
+    'register': ReceiveRegister,
 };
 
 client.on('message', message => {
