@@ -2,3 +2,4 @@ node_modules/
 njs/
 src/discordtoken.js
 data/
+store.db
