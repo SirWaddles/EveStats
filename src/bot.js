@@ -96,6 +96,7 @@ function SkillPrices(message, params) {
 }
 
 import {ReceiveRegister} from './skills';
+import {EFTFitStats} from './fits';
 
 const MessageActions = {
     default: SendGraphImage,
@@ -107,6 +108,9 @@ const MessageActions = {
 };
 
 client.on('message', message => {
+    if (message.content.slice(0, 5) == "```\n[") {
+        EFTFitStats(message);
+    }
     if (message.content.slice(0, 7) === 'plexbot') {
         var params = message.content.slice(7).trim().split(' ');
         if (params.length <= 0 || !MessageActions.hasOwnProperty(params[0])) {
