@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import approx from 'approximate-number';
 import DiscordToken from './discordtoken';
+import GetMeme from './memes';
 const client = new Discord.Client();
 
 import influx from './database';
@@ -108,6 +109,10 @@ const MessageActions = {
 };
 
 client.on('message', message => {
+    if (message.mentions.users.has(client.user.id)) {
+        message.channel.send(GetMeme());
+        return;
+    }
     if (message.content.slice(0, 5) == "```\n[") {
         EFTFitStats(message);
     }
