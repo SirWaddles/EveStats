@@ -1,5 +1,6 @@
 import http from 'http';
 import qs from 'querystring';
+import fetch from 'node-fetch';
 import crypto from 'crypto';
 import {OAuth2} from 'oauth';
 import {Hobgoblin} from './discordtoken';
@@ -34,6 +35,44 @@ function writeResponse(res, response) {
     res.end(response);
 }
 
+import {RegisterCharacter} from './dbstore';
+
+function GetCharactersWithData(authstate) {
+    return fetch("https://login.eveonline.com/oauth/verify", {
+        headers: {
+            'Authorization': 'Bearer ' + authstate.access_token,
+        },
+        method: 'GET',
+    }).then(r => r.json()).then(function(data) {
+        RegisterCharacter(data.CharacterID, authstate.message.author.id, data.CharacterName, authstate.access_token, authstate.refresh_token);
+        authstate.message.reply('Hey, thanks! **' + data.CharacterName + '** is registered to you.');
+    });
+}
+
+function GetNewAccessToken(refresh_token) {
+    return new Promise((resolve, reject) => {
+        oauth2.getOAuthAccessToken(refresh_token, {
+            redirect_uri: 'https://eve.genj.io/oauth/key/',
+            grant_type: 'refresh_token',
+        }, function(e, access_token, refresh_token, results) {
+            if (e) {
+                reject(e);
+                return;
+            }
+            if (results.error) {
+                reject(results);
+                return;
+            }
+            resolve({
+                access_token: access_token,
+                refresh_token: refresh_token,
+            });
+        });
+    });
+}
+
+export {GetNewAccessToken};
+
 http.createServer(function(req, res) {
     var params = req.url.split('/');
     if (params.length <= 2) {
@@ -41,16 +80,17 @@ http.createServer(function(req, res) {
         return;
     }
 
-    console.log(params);
-
     if (params[2].indexOf('key') === 0) {
         var qsObj = qs.parse(params[2].split('?')[1]);
         oauth2.getOAuthAccessToken(
             qsObj.code,
-            {redirect_uri: 'https://eve.genj.io/oauth/key/'},
+            {
+                redirect_uri: 'https://eve.genj.io/oauth/key/',
+                grant_type: 'authorization_code',
+            },
             function (e, access_token, refresh_token, results) {
                 if (e) {
-                    res.end(e);
+                    res.end(JSON.stringify(e));
                     return;
                 }
                 if (results.error) {
@@ -62,11 +102,11 @@ http.createServer(function(req, res) {
                 authstate[0].access_token = access_token;
                 authstate[0].refresh_token = refresh_token;
                 authstate[0].stage = 'tokens';
-                authstate[0].message.reply('Thanks!');
-                console.log(authstate);
-                return;
+                GetCharactersWithData(authstate[0]);
+                writeResponse(res, "Thanks! Should be working now.");
             }
         );
+        return;
     }
 
     var authstate = ONGOING_AUTH.filter(v => v.state == params[2]);

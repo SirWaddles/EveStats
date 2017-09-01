@@ -95,7 +95,6 @@ function SkillPrices(message, params) {
     });
 }
 
-import {ReceiveRegister} from './skills';
 import {EFTFitStats} from './fits';
 import {AuthorizeBot} from './auth';
 
@@ -105,7 +104,6 @@ const MessageActions = {
     'skill': SendGraphImage,
     'price': SkillPrices,
     'isk': IskPackages,
-    'register': ReceiveRegister,
     'authorize': AuthorizeBot,
 };
 
