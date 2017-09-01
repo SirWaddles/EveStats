@@ -1,7 +1,6 @@
 import Discord from 'discord.js';
 import approx from 'approximate-number';
 import DiscordToken from './discordtoken';
-import GetMeme from './memes';
 const client = new Discord.Client();
 
 import influx from './database';
@@ -98,6 +97,7 @@ function SkillPrices(message, params) {
 
 import {ReceiveRegister} from './skills';
 import {EFTFitStats} from './fits';
+import {AuthorizeBot} from './auth';
 
 const MessageActions = {
     default: SendGraphImage,
@@ -106,13 +106,10 @@ const MessageActions = {
     'price': SkillPrices,
     'isk': IskPackages,
     'register': ReceiveRegister,
+    'authorize': AuthorizeBot,
 };
 
 client.on('message', message => {
-    if (message.mentions.users.has(client.user.id)) {
-        message.channel.send(GetMeme());
-        return;
-    }
     if (message.content.slice(0, 5) == "```\n[") {
         EFTFitStats(message);
     }
