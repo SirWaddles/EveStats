@@ -35,6 +35,29 @@ function writeResponse(res, response) {
     res.end(response);
 }
 
+function ValidateCharacter(character) {
+    var expires = new Date(character.expires * 1000);
+    var today = new Date();
+    if (today > expires) {
+        return GetNewAccessToken(character.refresh_token).then(function(e) {
+            expires = (today.getTime() / 1000) + (e.expires * 60);
+            var newcharacter = {
+                character_id: character.character_id,
+                discord_id: character.discord_id,
+                character_name: character.character_name,
+                access_token: e.access_token,
+                refresh_token: e.refresh_token,
+                expires: expires,
+            };
+            RegisterCharacter(character.character_id, character.discord_id, character.character_name, e.access_token, e.refresh_token, expires);
+            return newcharacter;
+         });
+    }
+    return Promise.resolve(character);
+}
+
+export {ValidateCharacter};
+
 import {RegisterCharacter} from './dbstore';
 
 function GetCharactersWithData(authstate) {
@@ -56,16 +79,19 @@ function GetNewAccessToken(refresh_token) {
             grant_type: 'refresh_token',
         }, function(e, access_token, refresh_token, results) {
             if (e) {
+                console.log(e);
                 reject(e);
                 return;
             }
             if (results.error) {
+                console.log(results);
                 reject(results);
                 return;
             }
             resolve({
                 access_token: access_token,
                 refresh_token: refresh_token,
+                expires: results.expires,
             });
         });
     });

@@ -27,7 +27,9 @@ function EFTFitStats(message) {
         method: "POST",
     }).then(r => r.json());
 
-    var characters = GetCharacters(message.author.id).then(GetSkillList);
+    var characters = GetCharacters(message.author.id).then(GetSkillList).catch(function(e) {
+        return false;
+    });
     var prs = [fetchpr, characters];
 
     return Promise.all(prs).then(function(prdata) {
@@ -43,19 +45,24 @@ function EFTFitStats(message) {
         StatsEmbed.addField('EHP/s', Math.floor(Math.max(data.tank.armorRepair, data.tank.shieldRepair, data.tank.passiveShield)), true);
         StatsEmbed.addField('Weapon DPS', Math.floor(data.weaponDPS), true);
         StatsEmbed.addField('Drone DPS', Math.floor(GetDroneDPS(data.dronelist)), true);
-        StatsEmbed.addField('Cost', approx(GetModulePrices(data.modules)));
+        var cost = GetModulePrices(data.modules);
+        StatsEmbed.addField('Cost', Number.isNaN(cost) ? 'Cannot calculate' : approx(cost));
 
         var msgcontent = '';
-        if (prdata.length > 1) {
+        if (prdata.length > 1 && prdata[1] !== false) {
             var skills = GetRequiredSkills(data.skills, prdata[1]);
-            msgcontent = skills.slice(0,5).map(v => "**" + v.skill + "**: " + v.level).join("\n");
+            if (skills.length <= 0) {
+                msgcontent = 'You can fly this!';
+            } else {
+                msgcontent = "You need some more skills to fly that.\n" + skills.slice(0,5).map(v => "**" + v.skill + "**: " + v.level).join("\n");
+            }
         }
 
         message.channel.send(msgcontent, {
             embed: StatsEmbed
         });
     }).catch(function(e) {
-        console.log(e);
+        message.channel.send("Sorry, I wasn't able to process that. Let <@229419335930609664> know about it.");
     });
 }
 
