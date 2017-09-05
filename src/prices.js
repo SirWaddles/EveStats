@@ -19,7 +19,7 @@ RefreshPrices();
 export {RefreshPrices}
 
 function GetModulePrice(id) {
-    return PriceList.filter(v => v.type_id === id)[0].average_price;
+    return PriceList.filter(v => v.type_id === id).reduce((acc, v) => v.average_price, 0);
 }
 
 function GetModulePrices(modlist) {

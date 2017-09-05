@@ -40,7 +40,7 @@ function ValidateCharacter(character) {
     var today = new Date();
     if (today > expires) {
         return GetNewAccessToken(character.refresh_token).then(function(e) {
-            expires = (today.getTime() / 1000) + (e.expires * 60);
+            expires = (today.getTime() / 1000) + e.expires;
             var newcharacter = {
                 character_id: character.character_id,
                 discord_id: character.discord_id,
@@ -79,12 +79,12 @@ function GetNewAccessToken(refresh_token) {
             grant_type: 'refresh_token',
         }, function(e, access_token, refresh_token, results) {
             if (e) {
-                console.log(e);
+                console.error(e);
                 reject(e);
                 return;
             }
             if (results.error) {
-                console.log(results);
+                console.error(results);
                 reject(results);
                 return;
             }

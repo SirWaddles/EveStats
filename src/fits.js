@@ -79,6 +79,7 @@ function EFTFitStats(message) {
             embed: StatsEmbed
         });
     }).catch(function(e) {
+        console.error(e);
         message.channel.send("Sorry, I wasn't able to process that. Let <@229419335930609664> know about it.");
     });
 }
