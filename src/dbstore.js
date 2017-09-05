@@ -11,7 +11,7 @@ export {RegisterCharacter};
 
 function GetCharacters(discord) {
     return new Promise((resolve, reject) => {
-        sqldb.all("SELECT character_id, character_name, access_token, refresh_token, expires FROM characters WHERE discord_id = \"" + discord + "\"",
+        sqldb.all("SELECT character_id, discord_id, character_name, access_token, refresh_token, expires FROM characters WHERE discord_id = \"" + discord + "\"",
         function(err, row) {
             if (row.length <= 0) {
                 reject();
