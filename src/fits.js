@@ -10,8 +10,12 @@ function GetDroneDPS(dronelist) {
     return Math.max.apply(Math, dronelist.map(v => v.dps));
 }
 
+function DeduplicateSkills(skills) {
+    return skills.map(v => Object.assign(v, {level: Math.max.apply(Math, skills.filter(s => s.id === v.id).map(s => s.level))})).filter((v, idx, se) => idx == se.map(s => s.id).indexOf(v.id));
+}
+
 function GetRequiredSkills(skillfit, skills) {
-    return skillfit.filter(v => skills.filter(s => v.id == s.skill_id && s.current_skill_level >= v.level).length == 0);
+    return DeduplicateSkills(skillfit.filter(v => skills.filter(s => v.id == s.skill_id && s.current_skill_level >= v.level).length == 0));
 }
 
 function EFTFitStats(message) {
