@@ -17,7 +17,15 @@ function GetRequiredSkills(skillfit, skills) {
 function EFTFitStats(message) {
     var data = message.content;
     data = data.replace("```\n[", "[");
-    data = data.replace("```", "");
+    var lengthEnd = data.indexOf('```');
+    if (lengthEnd === -1) return;
+
+    var targetUser = message.author;
+    if (message.mentions.users.size > 0) {
+        targetUser = message.mentions.users.first();
+    }
+
+    data = data.substr(0, lengthEnd);
     var fetchpr = fetch("http://localhost:8000", {
         headers: {
             'Accept': 'application/json',
@@ -27,7 +35,7 @@ function EFTFitStats(message) {
         method: "POST",
     }).then(r => r.json());
 
-    var characters = GetCharacters(message.author.id).then(GetSkillList).catch(function(e) {
+    var characters = GetCharacters(targetUser.id).then(GetSkillList).catch(function(e) {
         return false;
     });
     var prs = [fetchpr, characters];
@@ -54,7 +62,8 @@ function EFTFitStats(message) {
             if (skills.length <= 0) {
                 msgcontent = 'You can fly this!';
             } else {
-                msgcontent = "You need some more skills to fly that.\n" + skills.slice(0,5).map(v => "**" + v.skill + "**: " + v.level).join("\n");
+                msgcontent = "You need some more skills to fly that.";
+                StatsEmbed.addField('Skills Required', skills.slice(0,5).map(v => "**" + v.skill + "**: " + v.level).join("\n"))
             }
         }
 
