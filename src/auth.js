@@ -139,7 +139,7 @@ http.createServer(function(req, res) {
     if (authstate.length > 0) {
         var authURL = oauth2.getAuthorizeUrl({
             redirect_uri: 'https://eve.genj.io/oauth/key',
-            scope: ['esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-wallet.read_character_wallet.v1 esi-markets.structure_markets.v1'],
+            scope: ['esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1'],
             state: authstate[0].state,
             response_type: 'code',
         });

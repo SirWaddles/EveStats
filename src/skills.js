@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import {ValidateCharacter} from './auth';
+import skilldata from '../skills.json';
 
 const SKILL_LIST = [];
 
@@ -30,3 +31,11 @@ function GetSkillList(character) {
 }
 
 export {GetSkillList};
+
+const SKILL_LEVELS = [0, 250, 1164, 6586, 37255, 210745];
+
+function GetSkillSP(skills) {
+    return skills.map(v => Object.assign(v, {sp_required: skilldata.filter(s => s.typeID == v.id).reduce((acc, s) => s.rank, 0) * SKILL_LEVELS.slice(v.current_level + 1, v.level + 1).reduce((acc, s) => acc + s, 0)}));
+}
+
+export {GetSkillSP};

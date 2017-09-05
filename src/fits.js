@@ -3,7 +3,7 @@ import Discord from 'discord.js';
 import approx from 'approximate-number';
 import {GetModulePrices} from './prices';
 import {GetCharacters} from './dbstore';
-import {GetSkillList} from './skills';
+import {GetSkillList, GetSkillSP} from './skills';
 
 function GetDroneDPS(dronelist) {
     if (dronelist.length <= 0) return 0;
@@ -15,6 +15,9 @@ function DeduplicateSkills(skills) {
 }
 
 function GetRequiredSkills(skillfit, skills) {
+    skillfit = skillfit.map(v => Object.assign(v, {
+        current_level: skills.filter(s => s.skill_id == v.id).reduce((acc, a) => a.current_skill_level, 0),
+    }));
     return DeduplicateSkills(skillfit.filter(v => skills.filter(s => v.id == s.skill_id && s.current_skill_level >= v.level).length == 0));
 }
 
@@ -63,11 +66,12 @@ function EFTFitStats(message) {
         var msgcontent = '';
         if (prdata.length > 1 && prdata[1] !== false) {
             var skills = GetRequiredSkills(data.skills, prdata[1]);
+            var spreq = GetSkillSP(skills).reduce((acc, v) => acc + v.sp_required, 0);
             if (skills.length <= 0) {
                 msgcontent = 'You can fly this!';
             } else {
                 msgcontent = "You need some more skills to fly that.";
-                StatsEmbed.addField('Skills Required', skills.slice(0,5).map(v => "**" + v.skill + "**: " + v.level).join("\n"))
+                StatsEmbed.addField('Skills Required', skills.slice(0,5).map(v => "**" + v.skill + "**: " + v.level + " (" + v.current_level + ")").join("\n") + "\nTotal SP: **" + spreq + "**");
             }
         }
 
