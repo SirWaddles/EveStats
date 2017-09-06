@@ -1,6 +1,8 @@
 import fetch from 'node-fetch';
 import {ValidateCharacter} from './auth';
+import {GetCharacters} from './dbstore';
 import skilldata from '../skills.json';
+import moment from 'moment';
 
 const SKILL_LIST = [];
 
@@ -39,3 +41,36 @@ function GetSkillSP(skills) {
 }
 
 export {GetSkillSP};
+
+function GetSkillQueue(input) {
+    return ValidateCharacter(input).then(function(character) {
+        return fetch("https://esi.tech.ccp.is/latest/characters/" + character.character_id + "/skillqueue/", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + character.access_token,
+            },
+            method: 'GET',
+        }).then(r => r.json());
+    });
+}
+
+function ListSkillQueue(message, params) {
+    return GetCharacters(message.author.id).then(GetSkillQueue).then(function(data) {
+        if (data.length <= 0) {
+            message.channel.send('No skill in training. You should probably fix that.');
+            return;
+        }
+        var currentData = skilldata.filter(s => data[0].skill_id == s.typeID)[0];
+        var now = moment();
+        var end = moment(data[data.length -1].finish_date);
+        var duration = moment.duration(end.diff(now));
+        message.channel.send('Currently training: **' + currentData.name + ' ' + data[0].finished_level + '**');
+        message.channel.send('Total queue time: **' + duration.humanize() + '**');
+    }).catch(function(e) {
+        console.error(e);
+        message.reply("Sorry, something went wrong. Is your auth working?");
+    });
+}
+
+export {ListSkillQueue};

@@ -97,6 +97,7 @@ function SkillPrices(message, params) {
 
 import {EFTFitStats} from './fits';
 import {AuthorizeBot} from './auth';
+import {ListSkillQueue} from './skills';
 
 const MessageActions = {
     default: SendGraphImage,
@@ -105,6 +106,7 @@ const MessageActions = {
     'price': SkillPrices,
     'isk': IskPackages,
     'authorize': AuthorizeBot,
+    'training': ListSkillQueue,
 };
 
 client.on('message', message => {

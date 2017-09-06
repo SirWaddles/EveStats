@@ -17,6 +17,7 @@
     "discord.js": "^11.1.0",
     "highcharts-export-server": "^1.0.18",
     "influx": "^5.0.7",
+    "moment": "^2.18.1",
     "node-fetch": "^1.7.1",
     "oauth": "^0.9.15",
     "react": "^15.6.1",
