@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import Discord from 'discord.js';
 import approx from 'approximate-number';
 import {GetModulePrices} from './prices';
-import {GetCharacters} from './dbstore';
+import {GetCharacters, GetCharacterByName} from './dbstore';
 import {GetSkillList, GetSkillSP} from './skills';
 
 function GetDroneDPS(dronelist) {
@@ -27,9 +27,14 @@ function EFTFitStats(message) {
     var lengthEnd = data.indexOf('```');
     if (lengthEnd === -1) return;
 
-    var targetUser = message.author;
+    var characters = Promise.resolve(false);
+    var characterText = data.substr(lengthEnd + 4);
     if (message.mentions.users.size > 0) {
-        targetUser = message.mentions.users.first();
+        characters = GetCharacters(message.mentions.users.first().id);
+    } else if (characterText.length > 3) {
+        characters = GetCharacterByName(characterText);
+    } else {
+        characters = GetCharacters(message.author.id);
     }
 
     data = data.substr(0, lengthEnd);
@@ -42,7 +47,8 @@ function EFTFitStats(message) {
         method: "POST",
     }).then(r => r.json());
 
-    var characters = GetCharacters(targetUser.id).then(GetSkillList).catch(function(e) {
+    characters = characters.then(GetSkillList).catch(function(e) {
+        console.error(e);
         return false;
     });
     var prs = [fetchpr, characters];

@@ -24,6 +24,21 @@ function GetCharacters(discord) {
 
 export {GetCharacters};
 
+function GetCharacterByName(character_name) {
+    return new Promise((resolve, reject) => {
+        sqldb.all("SELECT character_id, discord_id, character_name, access_token, refresh_token, expires FROM characters WHERE character_name = ?", character_name,
+        function(err, row) {
+            if (row.length <= 0) {
+                reject();
+                return;
+            }
+            resolve(row[0]);
+        });
+    });
+}
+
+export {GetCharacterByName};
+
 process.on('exit', function() {
     sqldb.close();
 });
