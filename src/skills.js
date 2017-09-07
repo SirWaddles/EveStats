@@ -56,16 +56,25 @@ function GetSkillQueue(input) {
 }
 
 function ListSkillQueue(message, params) {
-    return GetCharacters(message.author.id).then(GetSkillQueue).then(function(data) {
+    var discordId = message.author.id;
+    if (message.mentions.users.size > 0) {
+        discordId = message.mentions.users.first().id;
+    }
+    return GetCharacters(discordId).then(GetSkillQueue).then(function(data) {
         if (data.length <= 0) {
             message.channel.send('No skill in training. You should probably fix that.');
             return;
         }
-        var currentData = skilldata.filter(s => data[0].skill_id == s.typeID)[0];
+        var currentIdx = 0;
         var now = moment();
+        while (moment(data[currentIdx].finish_date) < now) {
+            currentIdx++;
+            if (currentIdx > data.length) break;
+        }
+        var currentData = skilldata.filter(s => data[currentIdx].skill_id == s.typeID)[0];
         var end = moment(data[data.length -1].finish_date);
         var duration = moment.duration(end.diff(now));
-        message.channel.send('Currently training: **' + currentData.name + ' ' + data[0].finished_level + '**');
+        message.channel.send('Currently training: **' + currentData.name + ' ' + data[currentIdx].finished_level + '**');
         message.channel.send('Total queue time: **' + duration.humanize() + '**');
     }).catch(function(e) {
         console.error(e);
