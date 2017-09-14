@@ -99,6 +99,7 @@ import {EFTFitStats} from './fits';
 import {AuthorizeBot} from './auth';
 import {ListSkillQueue} from './skills';
 import HelpCommand from './help';
+import {JimmyStart} from './jimmy';
 
 const MessageActions = {
     default: SendGraphImage,
@@ -109,6 +110,7 @@ const MessageActions = {
     'authorize': AuthorizeBot,
     'training': ListSkillQueue,
     'help': HelpCommand,
+    'jimmy': JimmyStart,
 };
 
 client.on('message', message => {

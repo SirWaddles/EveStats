@@ -99,8 +99,29 @@ function GetNewAccessToken(refresh_token) {
 
 export {GetNewAccessToken};
 
+const RESPONSE_TYPES = {};
+
+function AddResponseType(type, callb) {
+    RESPONSE_TYPES[type] = callb;
+}
+
+export {AddResponseType};
+
 http.createServer(function(req, res) {
     var params = req.url.split('/');
+
+    if (RESPONSE_TYPES.hasOwnProperty(params[1])) {
+        Promise.resolve(RESPONSE_TYPES[params[1]](req, params)).then(function(data) {
+            var jsonString = JSON.stringify(data);
+            res.writeHead(200, {
+                'Content-Type': 'application/json',
+                'Content-Length': jsonString.length,
+            });
+            res.end(jsonString);
+        });
+        return;
+    }
+
     if (params.length <= 2) {
         writeResponse(res, "not valid");
         return;
@@ -139,7 +160,7 @@ http.createServer(function(req, res) {
     if (authstate.length > 0) {
         var authURL = oauth2.getAuthorizeUrl({
             redirect_uri: 'https://eve.genj.io/oauth/key',
-            scope: ['esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1'],
+            scope: ['esi-location.read_location.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-location.read_online.v1'],
             state: authstate[0].state,
             response_type: 'code',
         });
