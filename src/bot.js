@@ -97,12 +97,16 @@ function SkillPrices(message, params) {
 
 import {EFTFitStats} from './fits';
 import {AuthorizeBot} from './auth';
-import {ListSkillQueue} from './skills';
+import {ListSkillQueue, DisplayAvatar} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
 
+function DefaultCommand(message, params) {
+    message.channel.send("Sorry, I can't figure out what you want. Type `plexbot help` to see my commands.");
+}
+
 const MessageActions = {
-    default: SendGraphImage,
+    default: DefaultCommand,
     'plex': SendGraphImage,
     'skill': SendGraphImage,
     'price': SkillPrices,
@@ -111,6 +115,7 @@ const MessageActions = {
     'training': ListSkillQueue,
     'help': HelpCommand,
     'jimmy': JimmyStart,
+    'avatar': DisplayAvatar,
 };
 
 client.on('message', message => {

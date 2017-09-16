@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import {ValidateCharacter} from './auth';
-import {GetCharacters} from './dbstore';
+import {GetCharacters, GetCharacterByName} from './dbstore';
 import skilldata from '../skills.json';
 import moment from 'moment';
 
@@ -55,12 +55,20 @@ function GetSkillQueue(input) {
     });
 }
 
-function ListSkillQueue(message, params) {
-    var discordId = message.author.id;
+function GetCharacterType(message, params) {
     if (message.mentions.users.size > 0) {
-        discordId = message.mentions.users.first().id;
+        return GetCharacters(message.mentions.users.first().id);
+    } else if (params.length > 1) {
+        params.shift();
+        var characterName = params.join(' ');
+        return GetCharacterByName(characterName);
+    } else {
+        return GetCharacters(message.author.id);
     }
-    return GetCharacters(discordId).then(GetSkillQueue).then(function(data) {
+}
+
+function ListSkillQueue(message, params) {
+    return GetCharacterType(message, params).then(GetSkillQueue).then(function(data) {
         if (data.length <= 0) {
             message.channel.send('No skill in training. You should probably fix that.');
             return;
@@ -82,4 +90,18 @@ function ListSkillQueue(message, params) {
     });
 }
 
-export {ListSkillQueue};
+function DisplayAvatar(message, params) {
+    return GetCharacterType(message, params).then(ValidateCharacter).then(function(data) {
+        return fetch("https://esi.tech.ccp.is/latest/characters/" + data.character_id + "/portrait/", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'GET',
+        });
+    }).then(r => r.json()).then(function(data) {
+        message.channel.send(data['px512x512']);
+    });
+}
+
+export {ListSkillQueue, DisplayAvatar};
