@@ -69,6 +69,11 @@ function GetCharacterType(message, params) {
 
 function ListSkillQueue(message, params) {
     return GetCharacterType(message, params).then(GetSkillQueue).then(function(data) {
+        if (!Array.isArray(data)) {
+            console.error(data);
+            message.channel.send('ESI BORKEDE');
+            return;
+        }
         if (data.length <= 0) {
             message.channel.send('No skill in training. You should probably fix that.');
             return;

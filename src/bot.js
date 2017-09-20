@@ -97,7 +97,7 @@ const MessageActions = {
     'authorize': AuthorizeBot,
     'training': ListSkillQueue,
     'help': HelpCommand,
-    'jimmy': JimmyStart,
+    'voyager': JimmyStart,
     'avatar': DisplayAvatar,
 };
 

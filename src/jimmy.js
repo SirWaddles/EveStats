@@ -19,9 +19,9 @@ function JimmyStart(message, params) {
             });
         }
 
-        message.author.send("Check this out! :slight_smile:\nhttps://jimmy.genj.io/?key=" + statestring);
+        message.author.send("Check this out! :slight_smile:\nhttps://voyager.genj.io/?key=" + statestring);
     }).catch(function(e) {
-        message.reply("You can't use Jimmy without authentication");
+        message.reply("You can't use Voyager without authentication");
     });
 }
 
