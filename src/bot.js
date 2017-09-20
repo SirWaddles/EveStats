@@ -77,29 +77,12 @@ function SkillPriceCount(plexprice, skillprice, plexcount) {
     return (plexprice / skillprice) * plexcount;
 }
 
-function SkillPrices(message, params) {
-    Promise.all([
-        FetchDatabaseStats('plex_price', 1),
-        FetchDatabaseStats('skill_price', 1),
-    ]).then(function(data) {
-        var plexprice = data[0].pop().lowestSell;
-        var skillprice = data[1].pop().highestBuy;
-        var totals = PlexPriceUSD.map(v => ({
-            val: v[1],
-            costper: PlexSkillPrice(plexprice, skillprice, v[1] / v[0]),
-            countper: SkillPriceCount(plexprice, skillprice, v[0]),
-            count: v[0],
-        }));
-        var text = totals.map(v => 'Price is **$' + v.costper.toFixed(2) + '** when buying *' + v.count + '* plex or **' + Math.floor(v.countper) + '** for $' + v.val);
-        message.channel.send(text.join("\n"));
-    });
-}
-
 import {EFTFitStats} from './fits';
 import {AuthorizeBot} from './auth';
 import {ListSkillQueue, DisplayAvatar} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
+import {GetPriceType} from './prices';
 
 function DefaultCommand(message, params) {
     message.channel.send("Sorry, I can't figure out what you want. Type `plexbot help` to see my commands.");
@@ -109,7 +92,7 @@ const MessageActions = {
     default: DefaultCommand,
     'plex': SendGraphImage,
     'skill': SendGraphImage,
-    'price': SkillPrices,
+    'price': GetPriceType,
     'isk': IskPackages,
     'authorize': AuthorizeBot,
     'training': ListSkillQueue,
