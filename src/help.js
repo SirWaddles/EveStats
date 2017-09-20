@@ -6,7 +6,7 @@ const HELP_STRING = `Hey! Hobgoblin is a bot built by <@229419335930609664> that
 \`plexbot authorize\` - Allows you to register your ESI Authorization to Hobgoblin so some other functions will work.
 \`plexbot training <mention>\` - Shows you what you're currently training, and the total amount of time left on your skill queue. With no parameters, it will show your details, but you can mention other people at the end of the command to show *their* training.
 \`plexbot help\` - Shows this message.
-\`plexbot jimmy\` - PMs a link with authorization to the Jimmy Pathfinding Utility
+\`plexbot voyager\` - PMs a link with authorization to the Voyager Pathfinding Utility
 \`plexbot avatar\` - Shows your EVE Display Picture
 
 You can also post an EFT fit copied from the in-game fitting window, or from Pyfa. This will generate an embed with various status about the fit, and details about whether you can fly it. Note that the format that these get posted in are very specific, here's an example of what it would look like **in your text box**
