@@ -30,6 +30,7 @@ function GetModulePrices(modlist) {
 setInterval(RefreshPrices, 86400000);
 
 function PrettyNumber(val) {
+    if (!val && val !== 0) return "IDFK";
     return val.toFixed(2).replace(/./g, function(c, i, a) {
         return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
     });
