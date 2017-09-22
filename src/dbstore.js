@@ -39,6 +39,38 @@ function GetCharacterByName(character_name) {
 
 export {GetCharacterByName};
 
+function CreateJimmyKey(discord_id, key) {
+    var stmt = sqldb.prepare('INSERT INTO jimmy_keys (discord_id, key) VALUES(?, ?)');
+    stmt.run(discord_id, key);
+    stmt.finalize();
+}
+
+function GetJimmyKey(discord_id) {
+    return new Promise((resolve, reject) => {
+        sqldb.all("SELECT key FROM jimmy_keys WHERE discord_id = ?", discord_id, function(err, row) {
+            if (row.length <= 0) {
+                reject();
+                return;
+            }
+            resolve(row[0]);
+        });
+    });
+}
+
+function GetJimmyOwner(key) {
+    return new Promise((resolve, reject) => {
+        sqldb.all("SELECT discord_id FROM jimmy_keys WHERE key = ?", key, function(err, row) {
+            if (row.length <= 0) {
+                reject();
+                return;
+            }
+            resolve(row[0]);
+        });
+    });
+}
+
+export {CreateJimmyKey, GetJimmyKey, GetJimmyOwner};
+
 process.on('exit', function() {
     sqldb.close();
 });

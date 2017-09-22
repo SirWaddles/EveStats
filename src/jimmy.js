@@ -1,25 +1,17 @@
 import crypto from 'crypto';
 import qs from 'querystring';
-import {GetCharacters} from './dbstore';
+import {GetCharacters, GetJimmyKey, CreateJimmyKey, GetJimmyOwner} from './dbstore';
 import {ValidateCharacter, AddResponseType} from './auth';
-
-var JIMMY_TOKENS = [];
 
 function JimmyStart(message, params) {
     GetCharacters(message.author.id).then(ValidateCharacter).then(function(character) {
-        var statestring = crypto.randomBytes(20).toString('hex');
-
-        var existing_token = JIMMY_TOKENS.filter(v => v.owner == message.author.id);
-        if (existing_token.length > 0) {
-            statestring = existing_token[0].state;
-        } else {
-            JIMMY_TOKENS.push({
-                state: statestring,
-                owner: message.author.id,
-            });
-        }
-
-        message.author.send("Check this out! :slight_smile:\nhttps://voyager.genj.io/?key=" + statestring);
+        GetJimmyKey(message.author.id).then(function(key) {
+            message.author.send("Here's your key! :slight_smile:\nhttps://voyager.genj.io/?key=" + key.key);
+        }).catch(function(e) {
+            var statestring = crypto.randomBytes(20).toString('hex');
+            CreateJimmyKey(message.author.id, statestring);
+            message.author.send("Here's your key! :slight_smile:\nhttps://voyager.genj.io/?key=" + statestring);
+        });
     }).catch(function(e) {
         message.reply("You can't use Voyager without authentication");
     });
@@ -27,11 +19,7 @@ function JimmyStart(message, params) {
 
 AddResponseType('character', function(req, params) {
     var qsObj = qs.parse(params[2].split('?')[1]);
-    var token = JIMMY_TOKENS.filter(v => v.state == qsObj.key);
-    if (token.length <= 0) return {error: true};
-    token = token[0];
-
-    return GetCharacters(token.owner).then(ValidateCharacter);
+    return GetJimmyOwner(qsObj.key).then(d => d.discord_id).then(GetCharacters).then(ValidateCharacter);
 });
 
 export {JimmyStart};
