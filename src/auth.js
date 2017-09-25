@@ -35,7 +35,7 @@ function writeResponse(res, response) {
     res.end(response);
 }
 
-function ValidateCharacter(character) {
+function ValidateOneCharacter(character) {
     var expires = new Date(character.expires * 1000);
     var today = new Date();
     if (today > expires) {
@@ -54,6 +54,13 @@ function ValidateCharacter(character) {
          });
     }
     return Promise.resolve(character);
+}
+
+function ValidateCharacter(character) {
+    if (Array.isArray(character)) {
+        return Promise.all(character.map(ValidateOneCharacter));
+    }
+    return ValidateOneCharacter(character);
 }
 
 export {ValidateCharacter};

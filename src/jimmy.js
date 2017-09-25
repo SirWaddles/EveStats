@@ -1,10 +1,10 @@
 import crypto from 'crypto';
 import qs from 'querystring';
-import {GetCharacters, GetJimmyKey, CreateJimmyKey, GetJimmyOwner} from './dbstore';
+import {GetAllCharacters, GetJimmyKey, CreateJimmyKey, GetJimmyOwner} from './dbstore';
 import {ValidateCharacter, AddResponseType} from './auth';
 
 function JimmyStart(message, params) {
-    GetCharacters(message.author.id).then(ValidateCharacter).then(function(character) {
+    GetAllCharacters(message.author.id).then(ValidateCharacter).then(function(character) {
         GetJimmyKey(message.author.id).then(function(key) {
             message.author.send("Here's your key! :slight_smile:\nhttps://voyager.genj.io/?key=" + key.key);
         }).catch(function(e) {
@@ -19,7 +19,9 @@ function JimmyStart(message, params) {
 
 AddResponseType('character', function(req, params) {
     var qsObj = qs.parse(params[2].split('?')[1]);
-    return GetJimmyOwner(qsObj.key).then(d => d.discord_id).then(GetCharacters).then(ValidateCharacter);
+    return GetJimmyOwner(qsObj.key).then(d => d.discord_id).then(GetAllCharacters).then(ValidateCharacter).catch(function(e) {
+        return {error: 'no auth'};
+    });
 });
 
 export {JimmyStart};

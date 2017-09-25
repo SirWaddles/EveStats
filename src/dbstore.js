@@ -9,7 +9,7 @@ function RegisterCharacter(character, discord, name, access_token, refresh_token
 
 export {RegisterCharacter};
 
-function GetCharacters(discord) {
+function GetAllCharacters(discord) {
     return new Promise((resolve, reject) => {
         sqldb.all("SELECT character_id, discord_id, character_name, access_token, refresh_token, expires FROM characters WHERE discord_id = ?", discord,
         function(err, row) {
@@ -17,12 +17,16 @@ function GetCharacters(discord) {
                 reject();
                 return;
             }
-            resolve(row[0]);
+            resolve(row);
         });
     });
 }
 
-export {GetCharacters};
+function GetCharacters(discord) {
+    return GetAllCharacters(discord).then(v => v[0]);
+}
+
+export {GetCharacters, GetAllCharacters};
 
 function GetCharacterByName(character_name) {
     return new Promise((resolve, reject) => {
