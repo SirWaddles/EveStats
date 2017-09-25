@@ -95,6 +95,7 @@ const MessageActions = {
     'price': GetPriceType,
     'isk': IskPackages,
     'authorize': AuthorizeBot,
+    'authorise': AuthorizeBot,
     'training': ListSkillQueue,
     'help': HelpCommand,
     'voyager': JimmyStart,
