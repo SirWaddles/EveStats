@@ -78,7 +78,7 @@ function SkillPriceCount(plexprice, skillprice, plexcount) {
 }
 
 import {EFTFitStats} from './fits';
-import {AuthorizeBot} from './auth';
+import {AuthorizeBot, AddResponseType} from './auth';
 import {ListSkillQueue, DisplayAvatar} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
@@ -87,6 +87,36 @@ import {GetPriceType} from './prices';
 function DefaultCommand(message, params) {
     message.channel.send("Sorry, I can't figure out what you want. Type `plexbot help` to see my commands.");
 }
+
+// Hobogoblin/Voyager/Jimmy Pings
+AddResponseType('pings', function(req, params) {
+    req.on('data', function(body) {
+        var data = JSON.parse(body);
+        data.forEach(function(ping) {
+            if (ping.target == 'dm') {
+                client.fetchUser(ping.discord).then(function(user){
+                    if (!user) return;
+                    user.send('We are now connected to **' + ping.name + '** (' + ping.system + ')');
+                });
+            }
+            if (ping.target == 'intel') {
+                client.channels.forEach(function(channel) {
+                    if (channel.id == '232332546220883968') {
+                        channel.send('We are now connected to **' + ping.name + '** (' + ping.system + ')');
+                    }
+                });
+            }
+            if (ping.target == 'public') {
+                client.channels.forEach(function(channel) {
+                    if (channel.id == '309487614724145154') {
+                        channel.send('@Public_pings We are now connected to **' + ping.name + '** (' + ping.system + ')');
+                    }
+                });
+            }
+        });
+    });
+    return true;
+});
 
 const MessageActions = {
     default: DefaultCommand,
