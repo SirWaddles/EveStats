@@ -28,7 +28,7 @@ function GetModulePrices(modlist) {
 }
 
 function GetModuleName(typeid) {
-    return Types.filter(v => v.type_id == typeid)[0];
+    return Types.filter(v => v.typeID == typeid)[0];
 }
 
 export {GetModuleName};

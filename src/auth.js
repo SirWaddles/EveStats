@@ -3,7 +3,7 @@ import qs from 'querystring';
 import fetch from 'node-fetch';
 import crypto from 'crypto';
 import {OAuth2} from 'oauth';
-import {Hobgoblin} from './discordtoken';
+import {Hobgoblin, BLUE_CORPS} from './discordtoken';
 
 var ONGOING_AUTH = [];
 
@@ -35,6 +35,12 @@ function writeResponse(res, response) {
     res.end(response);
 }
 
+function GetCharacterInfo(character) {
+    return fetch("https://esi.tech.ccp.is/latest/characters/" + character.character_id + "/", {
+        method: 'GET'
+    }).then(r => r.json());
+}
+
 function ValidateOneCharacter(character) {
     var expires = new Date(character.expires * 1000);
     var today = new Date();
@@ -49,9 +55,14 @@ function ValidateOneCharacter(character) {
                 refresh_token: e.refresh_token,
                 expires: expires,
             };
-            RegisterCharacter(character.character_id, character.discord_id, character.character_name, e.access_token, e.refresh_token, expires);
             return newcharacter;
-         });
+        }).then(function(char) {
+            return GetCharacterInfo(char).then(function(charinfo) {
+                if (BLUE_CORPS.indexOf(charinfo.corporation_id) === -1) throw "not in corp";
+                RegisterCharacter(char.character_id, char.discord_id, char.character_name, char.access_token, char.refresh_token, char.expires);
+                return char;
+            });
+        });
     }
     return Promise.resolve(character);
 }

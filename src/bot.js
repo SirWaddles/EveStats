@@ -122,9 +122,9 @@ AddResponseType('kbs', function(req, params) {
     req.on('data', function(body) {
         var data = JSON.parse(body);
         client.channels.forEach(function(channel) {
-            if (channel.id == '232332546220883968') {
+            if (channel.id == '364946895514370050') {
                 var ship = GetModuleName(data.kb.killmail.victim.ship_type_id);
-                channel.send('A ' + ship.typeName + ' just blew up in ' + data.kb.system.nickname);
+                channel.send('A ' + ship.typeName + ' just blew up in ' + data.system.nickname);
             }
         });
     });
