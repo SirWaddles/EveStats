@@ -27,6 +27,12 @@ function GetModulePrices(modlist) {
     return modlist.map(v => GetModulePrice(v.id) * v.amount).reduce((a, b) => a+b, 0);
 }
 
+function GetModuleName(typeid) {
+    return Types.filter(v => v.type_id == typeid)[0];
+}
+
+export {GetModuleName};
+
 setInterval(RefreshPrices, 86400000);
 
 function PrettyNumber(val) {

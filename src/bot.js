@@ -82,7 +82,7 @@ import {AuthorizeBot, AddResponseType} from './auth';
 import {ListSkillQueue, DisplayAvatar} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
-import {GetPriceType} from './prices';
+import {GetPriceType, GetModuleName} from './prices';
 
 function DefaultCommand(message, params) {
     message.channel.send("Sorry, I can't figure out what you want. Type `plexbot help` to see my commands.");
@@ -112,6 +112,19 @@ AddResponseType('pings', function(req, params) {
                         channel.send('@Public_pings We are now connected to **' + ping.name + '** (' + ping.system + ')');
                     }
                 });
+            }
+        });
+    });
+    return true;
+});
+
+AddResponseType('kbs', function(req, params) {
+    req.on('data', function(body) {
+        var data = JSON.parse(body);
+        client.channels.forEach(function(channel) {
+            if (channel.id == '232332546220883968') {
+                var ship = GetModuleName(data.kb.killmail.victim.ship_type_id);
+                channel.send('A ' + ship.typeName + ' just blew up in ' + data.kb.system.nickname);
             }
         });
     });
