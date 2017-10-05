@@ -3,7 +3,7 @@ import qs from 'querystring';
 import fetch from 'node-fetch';
 import crypto from 'crypto';
 import {OAuth2} from 'oauth';
-import {Hobgoblin, BLUE_CORPS} from './discordtoken';
+import {Hobgoblin, BLUE_CORPS, REDIRECT_URI} from './discordtoken';
 
 var ONGOING_AUTH = [];
 
@@ -93,7 +93,7 @@ function GetCharactersWithData(authstate) {
 function GetNewAccessToken(refresh_token) {
     return new Promise((resolve, reject) => {
         oauth2.getOAuthAccessToken(refresh_token, {
-            redirect_uri: 'https://eve.genj.io/oauth/key/',
+            redirect_uri: REDIRECT_URI,
             grant_type: 'refresh_token',
         }, function(e, access_token, refresh_token, results) {
             if (e) {
@@ -150,7 +150,7 @@ http.createServer(function(req, res) {
         oauth2.getOAuthAccessToken(
             qsObj.code,
             {
-                redirect_uri: 'https://eve.genj.io/oauth/key/',
+                redirect_uri: REDIRECT_URI,
                 grant_type: 'authorization_code',
             },
             function (e, access_token, refresh_token, results) {
@@ -177,7 +177,7 @@ http.createServer(function(req, res) {
     var authstate = ONGOING_AUTH.filter(v => v.state == params[2]);
     if (authstate.length > 0) {
         var authURL = oauth2.getAuthorizeUrl({
-            redirect_uri: 'https://eve.genj.io/oauth/key',
+            redirect_uri: REDIRECT_URI,
             scope: ['esi-location.read_location.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-location.read_online.v1'],
             state: authstate[0].state,
             response_type: 'code',
