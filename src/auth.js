@@ -3,7 +3,7 @@ import qs from 'querystring';
 import fetch from 'node-fetch';
 import crypto from 'crypto';
 import {OAuth2} from 'oauth';
-import {Hobgoblin, BLUE_CORPS, REDIRECT_URI} from './discordtoken';
+import {Hobgoblin, BLUE_CORPS, REDIRECT_URI, DESTINATION_URI} from './discordtoken';
 
 var ONGOING_AUTH = [];
 
@@ -167,8 +167,15 @@ http.createServer(function(req, res) {
                 authstate[0].access_token = access_token;
                 authstate[0].refresh_token = refresh_token;
                 authstate[0].stage = 'tokens';
-                GetCharactersWithData(authstate[0]);
-                writeResponse(res, "Thanks! Should be working now.");
+                GetCharactersWithData(authstate[0]).then(function(data) {
+                    res.writeHead(302, {
+                        'Location': DESTINATION_URI + "?key=" + authstate[0].state,
+                    });
+                    res.end();
+                }).catch(function() {
+                    res.writeHead(500, {});
+                    res.end();
+                });
             }
         );
         return;
