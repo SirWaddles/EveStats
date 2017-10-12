@@ -185,7 +185,7 @@ http.createServer(function(req, res) {
     if (authstate.length > 0) {
         var authURL = oauth2.getAuthorizeUrl({
             redirect_uri: REDIRECT_URI,
-            scope: ['esi-location.read_location.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-location.read_online.v1'],
+            scope: ['esi-location.read_location.v1 esi-skills.read_skills.v1 esi-skills.read_skillqueue.v1 esi-location.read_online.v1 esi-ui.write_waypoint.v1'],
             state: authstate[0].state,
             response_type: 'code',
         });
