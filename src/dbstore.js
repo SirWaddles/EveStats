@@ -44,7 +44,7 @@ function GetCharacterByName(character_name) {
 export {GetCharacterByName};
 
 function CreateJimmyKey(discord_id, key) {
-    var stmt = sqldb.prepare('INSERT INTO jimmy_keys (discord_id, key) VALUES(?, ?)');
+    var stmt = sqldb.prepare('REPLACE INTO jimmy_keys (discord_id, key) VALUES(?, ?)');
     stmt.run(discord_id, key);
     stmt.finalize();
 }

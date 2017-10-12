@@ -76,7 +76,7 @@ function ValidateCharacter(character) {
 
 export {ValidateCharacter};
 
-import {RegisterCharacter} from './dbstore';
+import {RegisterCharacter, CreateJimmyKey} from './dbstore';
 
 function GetCharactersWithData(authstate) {
     return fetch("https://login.eveonline.com/oauth/verify", {
@@ -167,9 +167,11 @@ http.createServer(function(req, res) {
                 authstate[0].access_token = access_token;
                 authstate[0].refresh_token = refresh_token;
                 authstate[0].stage = 'tokens';
+                var jkey = crypto.randomBytes(20).toString('hex');
+                CreateJimmyKey(authstate[0].message.author.id, jkey)
                 GetCharactersWithData(authstate[0]).then(function(data) {
                     res.writeHead(302, {
-                        'Location': DESTINATION_URI + "?key=" + authstate[0].state,
+                        'Location': DESTINATION_URI + "?key=" + jkey,
                     });
                     res.end();
                 }).catch(function() {
