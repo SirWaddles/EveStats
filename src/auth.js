@@ -16,6 +16,7 @@ function AuthorizeBot(message, params) {
     });
     var url = "https://eve.genj.io/oauth/" + statestring;
     message.author.send("Hey, awesome! Use this link, thanks :smile:\n" + url);
+    message.delete(10000);
 }
 
 export {AuthorizeBot};

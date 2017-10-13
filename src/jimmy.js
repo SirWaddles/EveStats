@@ -15,6 +15,7 @@ function JimmyStart(message, params) {
     }).catch(function(e) {
         message.reply("You can't use Voyager without authentication");
     });
+    message.delete(10000);
 }
 
 AddResponseType('character', function(req, params) {
