@@ -83,6 +83,7 @@ import {ListSkillQueue, DisplayAvatar} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
 import {GetPriceType, GetModuleName} from './prices';
+import {AskTime, ZoneSuggest} from './time';
 
 function DefaultCommand(message, params) {
     message.channel.send("Sorry, I can't figure out what you want. Type `plexbot help` to see my commands.");
@@ -143,11 +144,16 @@ const MessageActions = {
     'help': HelpCommand,
     'voyager': JimmyStart,
     'avatar': DisplayAvatar,
+    'time': ZoneSuggest,
 };
 
 client.on('message', message => {
     if (message.content.slice(0, 5) == "```\n[") {
         EFTFitStats(message);
+    }
+    if (message.content.slice(0, 4) == 'time') {
+        AskTime(message);
+        return;
     }
     if (message.content.slice(0, 7) === 'plexbot') {
         var params = message.content.slice(7).trim().split(' ');
