@@ -18,6 +18,7 @@ function UpdateSkills(input) {
             SKILL_LIST.push({
                 characterid: character.character_id,
                 skills: data.skills,
+                time: Date.now(),
             });
             return data.skills;
         });
@@ -25,7 +26,7 @@ function UpdateSkills(input) {
 }
 
 function GetSkillList(character) {
-    var skills = SKILL_LIST.filter(v => v.characterid == character.character_id);
+    var skills = SKILL_LIST.filter(v => (v.characterid == character.character_id) && (v.time > (Date.now() - 7200000)));
     if (skills.length <= 0) {
         return UpdateSkills(character);
     }

@@ -42,6 +42,8 @@ function PrettyNumber(val) {
     });
 }
 
+export {PrettyNumber};
+
 var PRICE_REQUESTS = [];
 
 function GetPriceType(message, params) {
