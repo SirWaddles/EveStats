@@ -121,9 +121,17 @@ AddResponseType('pings', function(req, params) {
 
 import {PrettyNumber} from './prices';
 
+var RECENT_MAILS = [];
+
 AddResponseType('kbs', function(req, params) {
     req.on('data', function(body) {
         var data = JSON.parse(body);
+
+        RECENT_MAILS.push(data);
+        if (RECENT_MAILS.length > 30) {
+            RECENT_MAILS.splice(0, RECENT_MAILS.length - 30);
+        }
+
         client.channels.forEach(function(channel) {
             if (channel.id == '364946895514370050') {
                 var ship = GetModuleName(data.kb.killmail.victim.ship_type_id);
@@ -133,6 +141,20 @@ AddResponseType('kbs', function(req, params) {
     });
     return true;
 });
+
+function KillmailShow(message, params) {
+    var index = 0;
+    if (params.length > 1) {
+        index = parseInt(params[1]);
+    }
+    if (RECENT_MAILS.length <= index) {
+        message.channel.send("Sorry, I haven't got that many. Must just be starting up.");
+        return;
+    }
+    index = RECENT_MAILS.length - index - 1;
+    var km = RECENT_MAILS[index];
+    message.channel.send("https://zkillboard.com/kill/" + km.kb.killmail.killmail_id);
+}
 
 const MessageActions = {
     default: DefaultCommand,
@@ -147,6 +169,7 @@ const MessageActions = {
     'voyager': JimmyStart,
     'avatar': DisplayAvatar,
     'time': ZoneSuggest,
+    'killmail': KillmailShow,
 };
 
 client.on('message', message => {
