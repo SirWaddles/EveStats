@@ -69,11 +69,12 @@ function GetCharacterType(message, params) {
 }
 
 function ShowSkillLevel(message, params) {
-    var [targetSkill] = skilldata.filter(v => v.name.toLowerCase() == params[2].toLowerCase());
+    var [targetSkill] = skilldata.filter(v => v.name.toLowerCase() == params[1].toLowerCase());
     if (!targetSkill) {
         message.reply("Sorry, I couldn't find that skill.");
         return;
     }
+    params.splice(1, 1);
     GetCharacterType(message, params).then(GetSkillList).then((skills) => {
         var skillLevel = 'Unlearned';
         var [skillLoad] = skills.filter(v => v.skill_id == targetSkill.typeID);

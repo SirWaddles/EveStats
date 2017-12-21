@@ -1,6 +1,6 @@
 const HELP_STRING = `Hey! Hobgoblin is a bot built by <@229419335930609664> that was mainly just made to watch plex prices. Here's some commands:
 \`plexbot plex <days>\` - This generates a graph of the buy and sell plex prices over the past n days. The graph will be deleted in 10 minutes after asking for it so it doesn't shit up the chat.
-\`plexbot skill <days>\` - Same as above, but for skill injectors. This is just Jita at the moment instead of IChooseYou, working on fixing this.
+\`plexbot skill <skill> <player>\` - Shows a skill level for a player, strings need to be quoted, e.g. \`plexbot skill "Waddles Panala" "Covert Ops"\`
 \`plexbot price\` - Search for an item and show it's price in isk
 \`plexbot isk\` - Shows a list of how much isk you can currently get for each plex package.
 \`plexbot authorize\` - Allows you to register your ESI Authorization to Hobgoblin so some other functions will work.

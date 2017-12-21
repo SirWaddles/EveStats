@@ -51,6 +51,10 @@ function SendGraphImage(message, params) {
     });
 }
 
+function ShowRoleIDs(message, params) {
+    message.channel.send(message.member.roles.map(v => "**" + (v.name.includes('everyone') ? 'The Everyone Role' : v.name) + "**: " + v.id).join("\n"));
+}
+
 const PlexPriceUSD = [
     [110, 5],
     [240, 10],
@@ -170,9 +174,12 @@ const MessageActions = {
     'avatar': DisplayAvatar,
     'time': ZoneSuggest,
     'killmail': KillmailShow,
+    'roles': ShowRoleIDs,
 };
 
 const MESSAGE_IDENT = 'plexbot';
+
+import {ROLE_REQUIREMENTS} from './discordtoken';
 
 client.on('message', message => {
     if (message.content.slice(0, 5) == "```\n[") {
@@ -189,7 +196,13 @@ client.on('message', message => {
             return;
         }
 
-        MessageActions[params[0]](message, params);
+        var required = ROLE_REQUIREMENTS[params[0]];
+        if (!required) return;
+        if (required === true || (Array.isArray(required) && message.member.roles.map(v => v.id).filter(v => required.includes(v)).length > 0)) {
+            MessageActions[params[0]](message, params);
+        } else {
+            message.reply("Sorry, you don't have permission to do that.");
+        }
     }
 });
 
