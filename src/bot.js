@@ -52,7 +52,7 @@ function SendGraphImage(message, params) {
 }
 
 function ShowRoleIDs(message, params) {
-    message.channel.send(message.member.roles.map(v => "**" + (v.name.includes('everyone') ? 'The Everyone Role' : v.name) + "**: " + v.id).join("\n"));
+    message.channel.send(message.guild.roles.map(v => "**" + (v.name.includes('everyone') ? 'The Everyone Role' : v.name) + "**: " + v.id).join("\n"));
 }
 
 const PlexPriceUSD = [
