@@ -69,18 +69,22 @@ function GetCharacterType(message, params) {
 }
 
 function ShowSkillLevel(message, params) {
-    var [targetSkill] = skilldata.filter(v => v.name.toLowerCase() == params[1].toLowerCase());
-    if (!targetSkill) {
+    var targetSkill = skilldata.filter(v => v.name.toLowerCase().includes(params[1].toLowerCase()));
+    if (targetSkill.length <= 0 || targetSkill.length > 5) {
         message.reply("Sorry, I couldn't find that skill.");
         return;
     }
     params.splice(1, 1);
     GetCharacterType(message, params).then(GetSkillList).then((skills) => {
-        var skillLevel = 'Unlearned';
-        var [skillLoad] = skills.filter(v => v.skill_id == targetSkill.typeID);
-        if (skillLoad) skillLevel = skillLoad.trained_skill_level;
-        message.channel.send("**" + targetSkill.name + "**: " + skillLevel);
-    }).catch(() => {
+        var skillMsg = targetSkill.map(skillTest => {
+            var skillLevel = 'Unlearned';
+            var [skillLoad] = skills.filter(v => v.skill_id == skillTest.typeID);
+            if (skillLoad) skillLevel = skillLoad.trained_skill_level;
+            return "**" + skillTest.name + "**: " + skillLevel;
+        }).join("\n");
+        message.channel.send(skillMsg);
+    }).catch((e) => {
+        console.error(e);
         message.reply("Something went wrong, idfk, shut up. Go yell at Waddles.");
     });
 }
