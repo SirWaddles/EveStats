@@ -16,9 +16,9 @@ function DeduplicateSkills(skills) {
 
 function GetRequiredSkills(skillfit, skills) {
     skillfit = skillfit.map(v => Object.assign(v, {
-        current_level: skills.filter(s => s.skill_id == v.id).reduce((acc, a) => a.current_skill_level, 0),
+        current_level: skills.filter(s => s.skill_id == v.id).reduce((acc, a) => a.trained_skill_level, 0),
     }));
-    return DeduplicateSkills(skillfit.filter(v => skills.filter(s => v.id == s.skill_id && s.current_skill_level >= v.level).length == 0));
+    return DeduplicateSkills(skillfit.filter(v => skills.filter(s => v.id == s.skill_id && s.trained_skill_level >= v.level).length == 0));
 }
 
 function EFTFitStats(message) {

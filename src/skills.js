@@ -61,11 +61,27 @@ function GetCharacterType(message, params) {
         return GetCharacters(message.mentions.users.first().id);
     } else if (params.length > 1) {
         params.shift();
-        var characterName = params.join(' ');
+        var characterName = params[0];
         return GetCharacterByName(characterName);
     } else {
         return GetCharacters(message.author.id);
     }
+}
+
+function ShowSkillLevel(message, params) {
+    var [targetSkill] = skilldata.filter(v => v.name.toLowerCase() == params[2].toLowerCase());
+    if (!targetSkill) {
+        message.reply("Sorry, I couldn't find that skill.");
+        return;
+    }
+    GetCharacterType(message, params).then(GetSkillList).then((skills) => {
+        var skillLevel = 'Unlearned';
+        var [skillLoad] = skills.filter(v => v.skill_id == targetSkill.typeID);
+        if (skillLoad) skillLevel = skillLoad.trained_skill_level;
+        message.channel.send("**" + targetSkill.name + "**: " + skillLevel);
+    }).catch(() => {
+        message.reply("Something went wrong, idfk, shut up. Go yell at Waddles.");
+    });
 }
 
 function ListSkillQueue(message, params) {
@@ -110,4 +126,4 @@ function DisplayAvatar(message, params) {
     });
 }
 
-export {ListSkillQueue, DisplayAvatar};
+export {ListSkillQueue, DisplayAvatar, ShowSkillLevel};

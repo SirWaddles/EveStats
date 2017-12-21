@@ -79,7 +79,7 @@ function SkillPriceCount(plexprice, skillprice, plexcount) {
 
 import {EFTFitStats} from './fits';
 import {AuthorizeBot, AddResponseType} from './auth';
-import {ListSkillQueue, DisplayAvatar} from './skills';
+import {ListSkillQueue, DisplayAvatar, ShowSkillLevel} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
 import {GetPriceType, GetModuleName} from './prices';
@@ -159,7 +159,7 @@ function KillmailShow(message, params) {
 const MessageActions = {
     default: DefaultCommand,
     'plex': SendGraphImage,
-    'skill': SendGraphImage,
+    'skill': ShowSkillLevel,
     'price': GetPriceType,
     'isk': IskPackages,
     'authorize': AuthorizeBot,
@@ -172,6 +172,8 @@ const MessageActions = {
     'killmail': KillmailShow,
 };
 
+const MESSAGE_IDENT = 'plexbot';
+
 client.on('message', message => {
     if (message.content.slice(0, 5) == "```\n[") {
         EFTFitStats(message);
@@ -180,8 +182,8 @@ client.on('message', message => {
         AskTime(message);
         return;
     }
-    if (message.content.slice(0, 7) === 'plexbot') {
-        var params = message.content.slice(7).trim().split(' ');
+    if (message.content.slice(0, 7) === MESSAGE_IDENT) {
+        var params = message.content.slice(MESSAGE_IDENT.length).trim().match(/\w+|"(?:\\"|[^"])+"/g).map(v => v.replace(new RegExp('"', 'g'), ''));
         if (params.length <= 0 || !MessageActions.hasOwnProperty(params[0])) {
             MessageActions.default(message, params);
             return;
