@@ -108,9 +108,14 @@ function ListSkillQueue(message, params) {
         }
         var currentData = skilldata.filter(s => data[currentIdx].skill_id == s.typeID)[0];
         var end = moment(data[data.length -1].finish_date);
+        var currentEnd = moment(data[currentIdx].finish_date);
         var duration = moment.duration(end.diff(now));
+        var currentDuration = moment.duration(currentEnd.diff(now));
         message.channel.send('Currently training: **' + currentData.name + ' ' + data[currentIdx].finished_level + '**');
+        message.channel.send('Time left for current skill: **' + Math.ceil(currentDuration.asDays()) + ' days**');
         message.channel.send('Total queue time: **' + duration.humanize() + '**');
+
+
     }).catch(function(e) {
         console.error(e);
         message.reply("Sorry, something went wrong. Is your auth working?");

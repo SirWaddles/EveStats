@@ -88,6 +88,8 @@ import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
 import {GetPriceType, GetModuleName} from './prices';
 import {AskTime, ZoneSuggest} from './time';
+import {GetLocationId} from './location';
+
 
 function DefaultCommand(message, params) {
     message.channel.send("Sorry, I can't figure out what you want. Type `plexbot help` to see my commands.");
@@ -175,6 +177,7 @@ const MessageActions = {
     'time': ZoneSuggest,
     'killmail': KillmailShow,
     'roles': ShowRoleIDs,
+    'location': GetLocationId,
 };
 
 const MESSAGE_IDENT = 'plexbot';
@@ -207,3 +210,8 @@ client.on('message', message => {
 });
 
 client.login(DiscordToken);
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at:', p, 'reason:', reason);
+  // application specific logging, throwing an error, or other logic here
+});

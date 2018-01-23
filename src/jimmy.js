@@ -21,7 +21,7 @@ function JimmyStart(message, params) {
 AddResponseType('character', function(req, params) {
     var qsObj = qs.parse(params[2].split('?')[1]);
     return GetJimmyOwner(qsObj.key).then(d => d.discord_id).then(GetAllCharacters).then(ValidateCharacter).catch(function(e) {
-        console.error(e);
+        console.error(['no auth', e]);
         return {error: 'no auth'};
     });
 });
