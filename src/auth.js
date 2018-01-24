@@ -75,7 +75,7 @@ function ValidateCharacter(character) {
     return ValidateOneCharacter(character);
 }
 
-export {ValidateCharacter};
+export {ValidateCharacter, ValidateOneCharacter};
 
 import {RegisterCharacter, CreateJimmyKey} from './dbstore';
 

@@ -24,7 +24,7 @@ function GetCharacterOnline(character) {
 
 function GetLocationId(message, params) {
     GetCharacterByName(params[1])
-        .then((v) => ValidateOneCharacter(v, true))
+        .then(ValidateOneCharacter)
         .then(GetCharacterLocation)
         .then(function(data) {
             message.channel.send(data.solar_system_id);

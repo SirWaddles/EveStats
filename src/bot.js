@@ -52,6 +52,7 @@ function SendGraphImage(message, params) {
 }
 
 function ShowRoleIDs(message, params) {
+    if (message.author.id !== '229419335930609664') return;
     message.channel.send(message.guild.roles.map(v => "**" + (v.name.includes('everyone') ? 'The Everyone Role' : v.name) + "**: " + v.id).join("\n"));
 }
 
