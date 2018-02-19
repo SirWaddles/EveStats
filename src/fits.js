@@ -57,6 +57,12 @@ function EFTFitStats(message) {
         var data = prdata[0];
         var StatsEmbed = new Discord.RichEmbed();
         var ehp = data.ehp.armor + data.ehp.hull + data.ehp.shield;
+        var capState = data.capStable ? (data.capState.toFixed(2) + '%') : (Math.floor(data.capState / 60) + 'm' + Math.floor(data.capState % 60) + 's');
+        var dps = {
+            'weapon': Math.floor(data.weaponDPS),
+            'fighter': Math.floor(data.fighterlist.reduce((acc, v) => acc + v.dps, 0)),
+            'drone': Math.floor(GetDroneDPS(data.dronelist)),
+        };
         StatsEmbed.setColor('AQUA');
         StatsEmbed.title = data.fitname;
         StatsEmbed.setThumbnail("https://eve.genj.io/imgs/renders/" + data.shipid + ".png");
@@ -64,8 +70,10 @@ function EFTFitStats(message) {
         StatsEmbed.addField('Max Velocity', Math.floor(data.speed), true);
         StatsEmbed.addField('EHP', approx(ehp), true);
         StatsEmbed.addField('EHP/s', Math.floor(Math.max(data.tank.armorRepair, data.tank.shieldRepair, data.tank.passiveShield)), true);
-        StatsEmbed.addField('Weapon DPS', Math.floor(data.weaponDPS), true);
-        StatsEmbed.addField('Drone DPS', Math.floor(GetDroneDPS(data.dronelist)), true);
+        if (dps.weapon > 0) StatsEmbed.addField('Weapon DPS', dps.weapon, true);
+        if (dps.drone > 0) StatsEmbed.addField('Drone DPS', dps.drone, true);
+        if (dps.fighter > 0) StatsEmbed.addField('Fighter DPS', dps.fighter, true);
+        StatsEmbed.addField('Cap Stable', capState, true);
         var cost = GetModulePrices(data.modules);
         StatsEmbed.addField('Cost', Number.isNaN(cost) ? 'Cannot calculate' : approx(cost));
 
