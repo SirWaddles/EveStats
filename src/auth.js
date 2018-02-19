@@ -3,7 +3,7 @@ import qs from 'querystring';
 import fetch from 'node-fetch';
 import crypto from 'crypto';
 import {OAuth2} from 'oauth';
-import {Hobgoblin, BLUE_CORPS, REDIRECT_URI, DESTINATION_URI} from './discordtoken';
+import {Hobgoblin, BLUE_CORPS, REDIRECT_URI, DESTINATION_URI, STATE_URI} from './discordtoken';
 
 var ONGOING_AUTH = [];
 
@@ -14,7 +14,7 @@ function AuthorizeBot(message, params) {
         message: message,
         stage: 'start',
     });
-    var url = "https://eve.genj.io/oauth/" + statestring;
+    var url = STATE_URI + statestring;
     message.author.send("Hey, awesome! Use this link, thanks :smile:\n" + url);
     message.delete(10000);
 }
@@ -59,7 +59,7 @@ function ValidateOneCharacter(character) {
             return newcharacter;
         }).then(function(char) {
             return GetCharacterInfo(char).then(function(charinfo) {
-                if (BLUE_CORPS.indexOf(charinfo.corporation_id) === -1) throw "not in corp";
+                if (BLUE_CORPS.indexOf(charinfo.corporation_id) === -1) throw "not in corp - " + charinfo.corporation_id;
                 RegisterCharacter(char.character_id, char.discord_id, char.character_name, char.access_token, char.refresh_token, char.expires);
                 return char;
             });
