@@ -2,6 +2,11 @@ import {Client, xml, jid, xmpp} from '@xmpp/client';
 import {JabberKey} from './discordtoken';
 
 const client = new Client();
+const PingListens = [];
+
+function AddJabberPingListen(listener) {
+    PingListens.push(listener);
+}
 
 client.start({
     uri: 'xmpp://jabber.pleaseignore.com',
@@ -15,24 +20,27 @@ client.handle('authenticate', auth => {
 
 client.on('error', err => {
   console.error('X:', err.toString())
-})
+});
 
 client.on('status', (status, value) => {
     // console.log('I:', status, value ? value.toString() : '')
-})
+});
 
 client.on('online', jid => {
     client.send(xml('presence'));
     // console.log('O:', 'online as', jid.toString())
-})
+});
 
 client.on('stanza', stanza => {
     // idk
-})
+});
 
 client.on('element', element => {
     if (element.name == 'message') {
-        console.log(element.attrs.from);
-        console.log(element.getChild('body').text());
+        if (element.attrs.from == 'pleaseignore.com' || element.attrs.from == 'authbot@pleaseignore.com') {
+            PingListens.forEach(v => v(element.getChild('body').text()));
+        }
     }
-})
+});
+
+export {AddJabberPingListen};

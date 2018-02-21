@@ -7,7 +7,7 @@ module.exports = {
     entry: {
         datafetch: './src/fetchstats.js',
         discordbot: './src/bot.js',
-        wsserver: './src/server.js',
+        jabber: './src/jabber.js',
     },
     externals: [nodeExternals()],
     target: 'node',

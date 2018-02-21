@@ -126,6 +126,16 @@ AddResponseType('pings', function(req, params) {
     return true;
 });
 
+import {AddJabberPingListen} from './jabber';
+
+AddJabberPingListen(function(text) {
+    client.channels.forEach(function(channel) {
+        if (channel.id == '415682501340823552') {
+            channel.send("@here\n```\n" + text + "\n```");
+        }
+    });
+});
+
 import {PrettyNumber} from './prices';
 
 var RECENT_MAILS = [];
@@ -193,6 +203,11 @@ client.on('message', message => {
         AskTime(message);
         return;
     }
+
+    if (message.channel.id == '415682501340823552') {
+        message.delete(1800000);
+    }
+
     if (message.content.slice(0, 7) === MESSAGE_IDENT) {
         var params = message.content.slice(MESSAGE_IDENT.length).trim().match(/\w+|"(?:\\"|[^"])+"/g).map(v => v.replace(new RegExp('"', 'g'), ''));
         if (params.length <= 0 || !MessageActions.hasOwnProperty(params[0])) {
