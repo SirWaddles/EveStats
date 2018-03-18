@@ -1,3 +1,4 @@
+import fs from 'fs';
 import {Client, xml, jid, xmpp} from '@xmpp/client';
 import {JabberKey} from './discordtoken';
 
@@ -8,10 +9,12 @@ function AddJabberPingListen(listener) {
     PingListens.push(listener);
 }
 
-client.start({
-    uri: 'xmpp://jabber.pleaseignore.com',
-    domain: 'pleaseignore.com',
-}).catch(err => console.error(err.message));
+if (JabberKey) {
+    client.start({
+        uri: 'xmpp://jabber.pleaseignore.com',
+        domain: 'pleaseignore.com',
+    }).catch(err => console.error(err.message));
+}
 
 client.handle('authenticate', auth => {
     return auth(JabberKey.username, JabberKey.password);
@@ -41,6 +44,7 @@ client.on('element', element => {
     if (element.name == 'message') {
         if (element.attrs.from == 'pleaseignore.com' || element.attrs.from == 'authbot@pleaseignore.com') {
             var message = element.getChild('body').text();
+            TEST_PING_MATCH.lastIndex = 0;
             var data = TEST_PING_MATCH.exec(message);
             if (!data) {
                 console.error('Ping body text: ' + message);
