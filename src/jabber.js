@@ -13,6 +13,7 @@ if (JabberKey) {
     client.start({
         uri: 'xmpp://jabber.pleaseignore.com',
         domain: 'pleaseignore.com',
+        reconnect: true,
     }).catch(err => console.error(err.message));
 }
 
@@ -37,6 +38,9 @@ client.on('online', jid => {
 client.on('stanza', stanza => {
     // idk
 });
+
+client.on('connect', () => {console.log('connected')});
+client.on('disconnect', e => console.log('disconnected', e));
 
 const TEST_PING_MATCH = (/#### SENT BY ([\w ]+) to ([\w/ ]+) @/g);
 

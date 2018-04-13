@@ -90,6 +90,7 @@ import {JimmyStart} from './jimmy';
 import {GetPriceType, GetModuleName} from './prices';
 import {AskTime, ZoneSuggest} from './time';
 import {GetLocationId} from './location';
+import {RelayMessage, DirectMessage} from './relay';
 
 
 function DefaultCommand(message, params) {
@@ -192,6 +193,8 @@ const MessageActions = {
     'killmail': KillmailShow,
     'roles': ShowRoleIDs,
     'location': GetLocationId,
+    'what': RelayMessage,
+    'how': RelayMessage,
 };
 
 const MESSAGE_IDENT = 'plexbot';
@@ -210,6 +213,11 @@ client.on('message', message => {
     /*if (message.channel.id == '416078412554174475') {
         message.delete(1800000);
     }*/
+
+    if (message.channel.type == 'dm') {
+        DirectMessage(message);
+        return;
+    }
 
     if (message.content.slice(0, 7) === MESSAGE_IDENT) {
         var params = message.content.slice(MESSAGE_IDENT.length).trim().match(/\w+|"(?:\\"|[^"])+"/g).map(v => v.replace(new RegExp('"', 'g'), ''));
