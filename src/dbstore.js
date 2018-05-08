@@ -7,7 +7,13 @@ function RegisterCharacter(character, discord, name, access_token, refresh_token
     stmt.finalize();
 }
 
-export {RegisterCharacter};
+function RemoveCharacter(character) {
+    var stmt = sqldb.prepare('DELETE FROM characters WHERE character_id = ?');
+    stmt.run(character);
+    stmt.finalize();
+}
+
+export {RegisterCharacter, RemoveCharacter};
 
 function GetAllCharacters(discord) {
     return new Promise((resolve, reject) => {

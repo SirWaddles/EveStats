@@ -77,7 +77,7 @@ function ValidateCharacter(character) {
 
 export {ValidateCharacter, ValidateOneCharacter};
 
-import {RegisterCharacter, CreateJimmyKey} from './dbstore';
+import {RegisterCharacter, CreateJimmyKey, RemoveCharacter, GetAllCharacters} from './dbstore';
 
 function GetCharactersWithData(authstate) {
     return fetch("https://login.eveonline.com/oauth/verify", {
@@ -90,6 +90,18 @@ function GetCharactersWithData(authstate) {
         authstate.message.reply('Hey, thanks! **' + data.CharacterName + '** is registered to you.');
     });
 }
+
+function UnauthorizeCharacter(message, params) {
+    if (params.length <= 1) return;
+    GetAllCharacters(message.author.id).then(chars => {
+        var [char] = chars.filter(v => v.character_name.toLowerCase() == params[1].toLowerCase());
+        if (!char) message.channel.send("Sorry, I couldn't find that character.");
+        RemoveCharacter(char.character_id);
+        message.channel.send("I've unauthorized that character for you.");
+    });
+}
+
+export {UnauthorizeCharacter};
 
 function GetNewAccessToken(refresh_token) {
     return new Promise((resolve, reject) => {

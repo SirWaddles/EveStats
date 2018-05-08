@@ -83,7 +83,7 @@ function SkillPriceCount(plexprice, skillprice, plexcount) {
 }
 
 import {EFTFitStats} from './fits';
-import {AuthorizeBot, AddResponseType} from './auth';
+import {AuthorizeBot, AddResponseType, UnauthorizeCharacter} from './auth';
 import {ListSkillQueue, DisplayAvatar, ShowSkillLevel} from './skills';
 import HelpCommand from './help';
 import {JimmyStart} from './jimmy';
@@ -185,6 +185,7 @@ const MessageActions = {
     'isk': IskPackages,
     'authorize': AuthorizeBot,
     'authorise': AuthorizeBot,
+    'unauth': UnauthorizeCharacter,
     'training': ListSkillQueue,
     'help': HelpCommand,
     'voyager': JimmyStart,
