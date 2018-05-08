@@ -95,7 +95,10 @@ function UnauthorizeCharacter(message, params) {
     if (params.length <= 1) return;
     GetAllCharacters(message.author.id).then(chars => {
         var [char] = chars.filter(v => v.character_name.toLowerCase() == params[1].toLowerCase());
-        if (!char) message.channel.send("Sorry, I couldn't find that character.");
+        if (!char) {
+            message.channel.send("Sorry, I couldn't find that character.");
+            return;
+        }
         RemoveCharacter(char.character_id);
         message.channel.send("I've unauthorized that character for you.");
     });
