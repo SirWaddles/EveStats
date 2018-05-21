@@ -92,7 +92,10 @@ function GetCharactersWithData(authstate) {
 }
 
 function UnauthorizeCharacter(message, params) {
-    if (params.length <= 1) return;
+    if (params.length <= 1) {
+        message.reply("You need to specify a character");
+        return;
+    }
     GetAllCharacters(message.author.id).then(chars => {
         var [char] = chars.filter(v => v.character_name.toLowerCase() == params[1].toLowerCase());
         if (!char) {
@@ -101,6 +104,10 @@ function UnauthorizeCharacter(message, params) {
         }
         RemoveCharacter(char.character_id);
         message.channel.send("I've unauthorized that character for you.");
+    }).catch(v => {
+        console.error(v);
+        message.reply("I couldn't find any characters");
+        return;
     });
 }
 
