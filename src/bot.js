@@ -91,6 +91,7 @@ import {GetPriceType, GetModuleName} from './prices';
 import {AskTime, ZoneSuggest} from './time';
 import {GetLocationId} from './location';
 import {RelayMessage, DirectMessage} from './relay';
+import {ShowAllCharacters} from './dbstore';
 
 
 function DefaultCommand(message, params) {
@@ -196,6 +197,7 @@ const MessageActions = {
     'location': GetLocationId,
     'what': RelayMessage,
     'how': RelayMessage,
+    'list': ShowAllCharacters,
 };
 
 const MESSAGE_IDENT = 'plexbot';

@@ -32,7 +32,13 @@ function GetCharacters(discord) {
     return GetAllCharacters(discord).then(v => v[0]);
 }
 
-export {GetCharacters, GetAllCharacters};
+function ShowAllCharacters(message, params) {
+    GetAllCharacters(message.author.id).then(chars => {
+        message.channel.send("```" + chars.map(v => v.character_name).join("\n") + "```");
+    });
+}
+
+export {GetCharacters, GetAllCharacters, ShowAllCharacters};
 
 function GetCharacterByName(character_name) {
     return new Promise((resolve, reject) => {
