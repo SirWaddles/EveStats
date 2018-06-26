@@ -3,10 +3,10 @@ import approx from 'approximate-number';
 import DiscordToken from './discordtoken';
 const client = new Discord.Client();
 
-import influx from './database';
-import {BuildGraph} from './chart';
+//import influx from './database';
+//import {BuildGraph} from './chart';
 
-function TranslateToHighcharts(data, property) {
+/*function TranslateToHighcharts(data, property) {
     return data.map(v => [
         v.time.getTime(),
         v[property]
@@ -49,14 +49,14 @@ function SendGraphImage(message, params) {
             message.delete(1000 * 60 * 10); // 10 minutes
         });
     });
-}
+}*/
 
 function ShowRoleIDs(message, params) {
     if (message.author.id !== '229419335930609664') return;
     message.channel.send(message.guild.roles.map(v => "**" + (v.name.includes('everyone') ? 'The Everyone Role' : v.name) + "**: " + v.id).join("\n"));
 }
 
-const PlexPriceUSD = [
+/*const PlexPriceUSD = [
     [110, 5],
     [240, 10],
     [500, 20],
@@ -80,7 +80,7 @@ function PlexSkillPrice(plexprice, skillprice, plexrate) {
 
 function SkillPriceCount(plexprice, skillprice, plexcount) {
     return (plexprice / skillprice) * plexcount;
-}
+}*/
 
 import {EFTFitStats} from './fits';
 import {AuthorizeBot, AddResponseType, UnauthorizeCharacter} from './auth';
@@ -128,19 +128,6 @@ AddResponseType('pings', function(req, params) {
     return true;
 });
 
-import {AddJabberPingListen} from './jabber';
-
-AddJabberPingListen(function(text, from, tostr) {
-    client.channels.forEach(function(channel) {
-        if (channel.id == '416078412554174475') {
-            if (tostr != 'Brand Newbros') {
-                return;
-            }
-            channel.send("@here\n```\n" + text + "\n```\nFrom: **" + from + "**\nTo: **" + tostr + "**");
-        }
-    });
-});
-
 import {PrettyNumber} from './prices';
 
 var RECENT_MAILS = [];
@@ -180,10 +167,10 @@ function KillmailShow(message, params) {
 
 const MessageActions = {
     default: DefaultCommand,
-    'plex': SendGraphImage,
+//    'plex': SendGraphImage,
     'skill': ShowSkillLevel,
     'price': GetPriceType,
-    'isk': IskPackages,
+//    'isk': IskPackages,
     'authorize': AuthorizeBot,
     'authorise': AuthorizeBot,
     'unauth': UnauthorizeCharacter,

@@ -4,8 +4,9 @@ const nodeExternals = require('webpack-node-externals');
 
 
 module.exports = {
+    mode: 'production',
     entry: {
-        datafetch: './src/fetchstats.js',
+        //datafetch: './src/fetchstats.js',
         discordbot: './src/bot.js',
         jabber: './src/jabber.js',
     },
@@ -16,18 +17,6 @@ module.exports = {
         filename: '[name].bundle.js',
     },
     resolve: {
-        extensions: [ '.js', '.json' ]
+        extensions: ['.js', '.json']
     },
-    plugins: [
-        new webpack.DefinePlugin({
-          'process.env': {
-            NODE_ENV: JSON.stringify('production')
-          }
-      }),
-    ],
-    module: {
-        loaders: [
-
-        ]
-    }
 };
